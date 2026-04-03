@@ -8,9 +8,9 @@ Use this tool proactively in these scenarios:
 2. Non-trivial and complex tasks - Tasks that require careful planning or multiple operations
 3. User explicitly requests todo list - When the user directly asks you to use the todo list
 4. User provides multiple tasks - When users provide a list of things to be done (numbered or comma-separated)
-5. After receiving new instructions - Immediately capture user requirements as todos. Feel free to edit the todo list based on new information.
+5. After receiving new instructions - Immediately capture user requirements as todos. Preserve the status of any existing unfinished items unless you actually completed or cancelled them. Adding scope should usually append or re-plan tasks, not auto-complete earlier ones.
 6. After completing a task - Mark it complete and add any new follow-up tasks
-7. When you start working on a new task, mark the todo as in_progress. Ideally you should only have one todo as in_progress at a time. Complete existing tasks before starting new ones.
+7. When you start working on a new task, mark the todo as in_progress. Ideally you should only have one todo as in_progress at a time. Do not mark existing todos as completed just because you are adding new ones or revising the plan.
 
 ## When NOT to Use This Tool
 
@@ -152,11 +152,12 @@ The assistant did not use the todo list because this is a single command executi
    - cancelled: Task no longer needed
 
 2. **Task Management**:
-   - Update task status in real-time as you work
-   - Mark tasks complete IMMEDIATELY after finishing (don't batch completions)
-   - Only have ONE task in_progress at any time
-   - Complete current tasks before starting new ones
-   - Cancel tasks that become irrelevant
+- Update task status in real-time as you work
+- Mark tasks complete IMMEDIATELY after finishing (don't batch completions)
+- Only have ONE task in_progress at any time
+- Preserve unfinished task statuses when re-planning or adding new tasks
+- Only mark a task completed when the work is actually done
+- Cancel tasks that become irrelevant
 
 3. **Task Breakdown**:
    - Create specific, actionable items
@@ -164,4 +165,3 @@ The assistant did not use the todo list because this is a single command executi
    - Use clear, descriptive task names
 
 When in doubt, use this tool. Being proactive with task management demonstrates attentiveness and ensures you complete all requirements successfully.
-
