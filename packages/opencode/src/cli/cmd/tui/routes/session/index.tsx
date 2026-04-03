@@ -1312,6 +1312,18 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
   const sync = useSync()
   const messages = createMemo(() => sync.data.message[props.message.sessionID] ?? [])
   const model = createMemo(() => Model.name(ctx.providers(), props.message.providerID, props.message.modelID))
+  const toolCount = createMemo(() => props.parts.filter((part) => part.type === "tool").length)
+  const hasVisibleText = createMemo(() =>
+    props.parts.some((part) => part.type === "text" && part.text.trim()),
+  )
+  const hasVisibleReasoning = createMemo(() =>
+    ctx.showThinking() &&
+      props.parts.some((part) => part.type === "reasoning" && part.text.replace("[REDACTED]", "").trim()),
+  )
+  const hasVisibleTool = createMemo(() =>
+    props.parts.some((part) => part.type === "tool" && (ctx.showDetails() || part.state.status !== "completed")),
+  )
+  const hasVisibleContent = createMemo(() => hasVisibleText() || hasVisibleReasoning() || hasVisibleTool())
 
   const final = createMemo(() => {
     return props.message.finish && !["tool-calls", "unknown"].includes(props.message.finish)
@@ -1329,6 +1341,18 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
 
   return (
     <>
+      <Show when={!hasVisibleContent()}>
+        <box id={props.message.id} paddingLeft={3} marginTop={1} flexShrink={0}>
+          <text fg={theme.textMuted}>
+            <Show
+              when={toolCount() > 0}
+              fallback={<>↳ Assistant response has no visible transcript content</>}
+            >
+              ↳ {toolCount()} tool call{toolCount() === 1 ? "" : "s"} completed
+            </Show>
+          </text>
+        </box>
+      </Show>
       <For each={props.parts}>
         {(part, index) => {
           const component = createMemo(() => PART_MAPPING[part.type as keyof typeof PART_MAPPING])
